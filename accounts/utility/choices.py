@@ -17,3 +17,9 @@ GENDER_CHOICES = (
         ("Female","Female"),
         ("Others","Others"),
     )
+
+BUSINESS_SCALE_CHOICES = (
+        ("Small","Small"),
+        ("Medium","Medium"),
+        ("Large","Large"),
+    )

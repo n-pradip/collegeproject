@@ -1,5 +1,5 @@
 from django.db import models
-from .utility.choices import USER_ROLES, GENDER_CHOICES
+from .utility.choices import USER_ROLES, GENDER_CHOICES, BUSINESS_SCALE_CHOICES
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser,PermissionsMixin
 
 
@@ -109,17 +109,28 @@ class UserTokens(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class FarmerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="farmer_profile")
     bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_picture/', blank=True, null=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='farmer_profile_picture/', blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
+    scale = models.CharField(choices=BUSINESS_SCALE_CHOICES, max_length=128, null=True, blank=True)
     birthdate = models.DateField(blank=True, null=True)
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, null=True)
-    interests = models.CharField(max_length=255, blank=True, null=True)
-    social_media_links = models.JSONField(blank=True, null=True)
-    is_subscribed = models.BooleanField(default=False)
+    
 
     def __str__(self):
         return self.user.username
+
+
+class BuyerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="buyer_profile")
+    bio = models.TextField(blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='buyer_profile_picture/', blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    birthdate = models.DateField(blank=True, null=True)
+    
+
+    def __str__(self):
+        return self.user.username
+    
+

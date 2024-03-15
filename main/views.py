@@ -1,7 +1,17 @@
 from rest_framework import viewsets
-from .models import FarmerProfile, VendorProfile, Product, Order, Message, ProductCategory
-from .serializers import FarmerProfileSerializer, VendorProfileSerializer, ProductSerializer, OrderSerializer, MessageSerializer,ProductCategorySerializer
+from .models import FarmerProfile, VendorProfile, MarketplaceProduct, Order, Message, MarketplaceProductCategory, GovernmentProduct, GovernmentProductCategory
+from .serializers import FarmerProfileSerializer, VendorProfileSerializer, MarketplaceProductSerializer, OrderSerializer, MessageSerializer,MarketplaceProductCategorySerializer, GovernmentProductSerializer, GovernmentProductCategorySerializer
+from django.http import JsonResponse
+from gtts import gTTS
+import os
+from django.views.decorators.csrf import csrf_exempt
 
+from django.shortcuts import render
+def test_func(request):
+    context={
+
+    }
+    return render(request,'test.html',context)
 class FarmerProfileViewSet(viewsets.ModelViewSet):
     queryset = FarmerProfile.objects.all()
     serializer_class = FarmerProfileSerializer
@@ -10,13 +20,6 @@ class VendorProfileViewSet(viewsets.ModelViewSet):
     queryset = VendorProfile.objects.all()
     serializer_class = VendorProfileSerializer
 
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-class ProductCategoryViewset(viewsets.ModelViewSet):
-    queryset = ProductCategory.objects.all()
-    serializer_class = ProductCategorySerializer
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
@@ -27,14 +30,39 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
 
 
-from django.http import JsonResponse
-from gtts import gTTS
-import os
-from django.views.decorators.csrf import csrf_exempt
+
+
+# ============================== Marketplace ===============================
+class MarketplaceProductViewSet(viewsets.ModelViewSet):
+    queryset = MarketplaceProduct.objects.all()
+    serializer_class = MarketplaceProductSerializer
+
+class MarketplaceProductCategoryViewset(viewsets.ModelViewSet):
+    queryset = MarketplaceProductCategory.objects.all()
+    serializer_class = MarketplaceProductCategorySerializer
+
+
+
+
+# ============================== Product By Government =====================
+class GovernmentProductViewSet(viewsets.ModelViewSet):
+    queryset = GovernmentProduct.objects.all()
+    serializer_class = GovernmentProductSerializer
+
+class GovernmentProductCategoryViewset(viewsets.ModelViewSet):
+    queryset = GovernmentProductCategory.objects.all()
+    serializer_class = GovernmentProductCategorySerializer
+
+
+# ============================== Online consultation =======================
+
+
+# ============================== data training =============================
+
 
 @csrf_exempt
 def generate_text_to_speech(request, product_id):
-    product = Product.objects.get(id=product_id)
+    product = MarketplaceProduct.objects.get(id=product_id)
 
     product_info_ne = product.name+" को मूल्य" + str(product.price)+ " " + "अगाडि जानको लागि हरियो बटनमा क्लिक गर्नुहोस्"
 

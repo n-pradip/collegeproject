@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
     path('generate_text_to_speech/<int:product_id>/', generate_text_to_speech, name='generate_text_to_speech'),
+    path('test',test_func, name='test page')
 ]
 from django.conf import settings
 from django.contrib import admin

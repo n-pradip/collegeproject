@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import FarmerProfile, VendorProfile, Product, Order, Message, ProductCategory
+from .models import FarmerProfile, VendorProfile, MarketplaceProduct, Order, Message, MarketplaceProductCategory, GovernmentProduct, GovernmentProductCategory
 
 class FarmerProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,9 +11,9 @@ class VendorProfileSerializer(serializers.ModelSerializer):
         model = VendorProfile
         fields = '__all__'
 
-class ProductSerializer(serializers.ModelSerializer):
+class MarketplaceProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Product
+        model = MarketplaceProduct
         fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -26,14 +26,17 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = '__all__'
 
-class ProductCategorySerializer(serializers.ModelSerializer):
+class MarketplaceProductCategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProductCategory
+        model = MarketplaceProductCategory
         fields = '__all__'
 
-# from .models import Speech
+class GovernmentProductCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GovernmentProductCategory
+        fields = '__all__'
 
-# class SpeechSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Speech
-#         fields = ['id', 'text', 'audio_file']
+class GovernmentProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GovernmentProduct
+        fields = '__all__'
