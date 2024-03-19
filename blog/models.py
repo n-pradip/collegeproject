@@ -1,10 +1,12 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
+import uuid
 
 
 
 # ============================== Blogpost ==================================
 class BlogpostModel(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     title = models.CharField(max_length=128)
     author=  models.CharField(max_length=128)
     content = models.TextField() 
@@ -18,6 +20,7 @@ class BlogpostModel(models.Model):
 
 # ============================== Government notice =========================
 class NoticeModel(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     title = models.CharField(max_length=128)
     author=  models.CharField(max_length=128)
     content = models.TextField() 

@@ -1,8 +1,12 @@
 from rest_framework import viewsets
-from .models import FarmerProfile, VendorProfile, MarketplaceProduct, Order, Message, MarketplaceProductCategory, GovernmentProduct, GovernmentProductCategory
-from .serializers import FarmerProfileSerializer, VendorProfileSerializer, MarketplaceProductSerializer, OrderSerializer, MessageSerializer,MarketplaceProductCategorySerializer, GovernmentProductSerializer, GovernmentProductCategorySerializer
+from .models import FarmerProfile, MarketplaceProduct, MarketplaceProductCategory, GovernmentProduct, GovernmentProductCategory
+from .serializers import FarmerProfileSerializer, MarketplaceProductSerializer,MarketplaceProductCategorySerializer, GovernmentProductSerializer, GovernmentProductCategorySerializer
 from django.http import JsonResponse
 from gtts import gTTS
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from .models import MarketplaceProductOrder, GovernmentProductOrder
+from .serializers import MarketplaceProductOrderSerializer, GovernmentProductOrderSerializer
 import os
 from django.views.decorators.csrf import csrf_exempt
 
@@ -16,21 +20,6 @@ class FarmerProfileViewSet(viewsets.ModelViewSet):
     queryset = FarmerProfile.objects.all()
     serializer_class = FarmerProfileSerializer
 
-class VendorProfileViewSet(viewsets.ModelViewSet):
-    queryset = VendorProfile.objects.all()
-    serializer_class = VendorProfileSerializer
-
-
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-
-class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
-    serializer_class = MessageSerializer
-
-
-
 
 # ============================== Marketplace ===============================
 class MarketplaceProductViewSet(viewsets.ModelViewSet):
@@ -41,6 +30,10 @@ class MarketplaceProductCategoryViewset(viewsets.ModelViewSet):
     queryset = MarketplaceProductCategory.objects.all()
     serializer_class = MarketplaceProductCategorySerializer
 
+class MarketplaceProductOrderViewSet(viewsets.ModelViewSet):
+    queryset = MarketplaceProductOrder.objects.all()
+    serializer_class = MarketplaceProductOrderSerializer
+    permission_classes = [IsAuthenticated]
 
 
 
@@ -53,6 +46,10 @@ class GovernmentProductCategoryViewset(viewsets.ModelViewSet):
     queryset = GovernmentProductCategory.objects.all()
     serializer_class = GovernmentProductCategorySerializer
 
+class GovernmentProductOrderViewSet(viewsets.ModelViewSet):
+    queryset = GovernmentProductOrder.objects.all()
+    serializer_class = GovernmentProductOrderSerializer
+    permission_classes = [IsAuthenticated]
 
 # ============================== Online consultation =======================
 
