@@ -1,16 +1,14 @@
 from rest_framework import viewsets
-from .models import FarmerProfile, MarketplaceProduct, MarketplaceProductCategory, GovernmentProduct, GovernmentProductCategory
-from .serializers import FarmerProfileSerializer, MarketplaceProductSerializer,MarketplaceProductCategorySerializer, GovernmentProductSerializer, GovernmentProductCategorySerializer
+from .models import *
+from .serializers import *
 from django.http import JsonResponse
 from gtts import gTTS
-from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .models import MarketplaceProductOrder, GovernmentProductOrder
-from .serializers import MarketplaceProductOrderSerializer, GovernmentProductOrderSerializer
 import os
 from django.views.decorators.csrf import csrf_exempt
-
+from rest_framework import status
 from django.shortcuts import render
+
 def test_func(request):
     context={
 
@@ -36,7 +34,15 @@ class MarketplaceProductOrderViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
+class ProductRatingViewSet(viewsets.ModelViewSet):
+    queryset = ProductRating.objects.all()
+    serializer_class = ProductRatingSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 # ============================== Product By Government =====================
 class GovernmentProductViewSet(viewsets.ModelViewSet):
     queryset = GovernmentProduct.objects.all()
@@ -61,7 +67,8 @@ class GovernmentProductOrderViewSet(viewsets.ModelViewSet):
 def generate_text_to_speech(request, product_id):
     product = MarketplaceProduct.objects.get(id=product_id)
 
-    product_info_ne = product.name+" को मूल्य" + str(product.price)+ " " + "अगाडि जानको लागि हरियो बटनमा क्लिक गर्नुहोस्"
+    # product_info_ne = product.name+" को मूल्य" + str(product.price)+ " " + "अगाडि जानको लागि हरियो बटनमा क्लिक गर्नुहोस्"
+    product_info_ne = "ज पायो तेइ नभन बुझ्येउ फुछी केटि "
 
     from django.conf import settings
     tts = gTTS(text=product_info_ne, lang='ne')
@@ -74,3 +81,43 @@ def generate_text_to_speech(request, product_id):
     audio_path = f'media/product_audio/{product_id}_ne.mp3'
     tts.save(audio_path)
     return JsonResponse({'audio_url': audio_path})
+
+
+#=============================== recommendation algorithm ================================
+# views.py
+from django.db.models import Avg
+from .models import ProductRating
+
+def get_recommendations(user):
+    # Get products rated by the user
+    rated_products = ProductRating.objects.filter(user=user)
+
+    # Calculate average rating for each product
+    product_ratings = {}
+    for rating in rated_products:
+        if rating.product not in product_ratings:
+            product_ratings[rating.product] = []
+        product_ratings[rating.product].append(rating.rating)
+
+    # Calculate average rating for each product
+    for product, ratings in product_ratings.items():
+        product.average_rating = sum(ratings) / len(ratings)
+
+    # Sort products by average rating
+    sorted_products = sorted(product_ratings.keys(), key=lambda x: x.average_rating, reverse=True)
+
+    # Return top recommended products
+    return sorted_products[:5]
+
+# views.py
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import MarketplaceProduct
+from .serializers import MarketplaceProductSerializer
+
+@api_view(['GET'])
+def recommend_products(request):
+    user = request.user  # Assuming user is authenticated
+    recommended_products = get_recommendations(user)
+    serializer = MarketplaceProductSerializer(recommended_products, many=True)
+    return Response(serializer.data)

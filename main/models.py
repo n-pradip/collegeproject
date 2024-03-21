@@ -98,3 +98,12 @@ class Message(models.Model):
 
     def __str__(self):
         return f"From {self.sender.username} to {self.receiver.username} at {self.timestamp}"
+
+
+class ProductRating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(MarketplaceProduct, on_delete=models.CASCADE)
+    rating = models.FloatField()
+
+    class Meta:
+        unique_together = ('user', 'product')

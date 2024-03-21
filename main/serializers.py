@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import FarmerProfile, MarketplaceProduct, MarketplaceProductCategory, GovernmentProduct, GovernmentProductCategory, MarketplaceProductOrder, GovernmentProductOrder
+from .models import FarmerProfile, MarketplaceProduct, MarketplaceProductCategory, GovernmentProduct, GovernmentProductCategory, MarketplaceProductOrder, GovernmentProductOrder, ProductRating
 
 class FarmerProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,3 +36,9 @@ class GovernmentProductOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = GovernmentProductOrder
         fields = '__all__'
+
+
+class ProductRatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductRating
+        fields = ['user', 'product', 'rating']

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import MarketplaceProductViewSet, MarketplaceProductCategoryViewset, GovernmentProductViewSet, GovernmentProductCategoryViewset, MarketplaceProductOrderViewSet, GovernmentProductOrderViewSet
+from .views import MarketplaceProductViewSet, MarketplaceProductCategoryViewset, GovernmentProductViewSet, GovernmentProductCategoryViewset, MarketplaceProductOrderViewSet, GovernmentProductOrderViewSet, ProductRatingViewSet
 from blog.views import NoticeViewset
 router = DefaultRouter()
 # router.register(r'farmer-profiles', FarmerProfileViewSet)
@@ -13,6 +13,8 @@ router.register(r'marketplace-product-orders', MarketplaceProductOrderViewSet)
 router.register(r'government-product-orders', GovernmentProductOrderViewSet)
 
 router.register(r'notice', NoticeViewset, basename='notice')
+
+router.register(r'ratings', ProductRatingViewSet)
 
 # router.register(r'speech', SpeechViewSet, basename='speech')
 
