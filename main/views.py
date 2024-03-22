@@ -18,6 +18,18 @@ class FarmerProfileViewSet(viewsets.ModelViewSet):
     queryset = FarmerProfile.objects.all()
     serializer_class = FarmerProfileSerializer
 
+class Order(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, default='Pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Order #{self.id} by {self.user.email}"
+
 
 # ============================== Marketplace ===============================
 class MarketplaceProductViewSet(viewsets.ModelViewSet):
@@ -28,10 +40,6 @@ class MarketplaceProductCategoryViewset(viewsets.ModelViewSet):
     queryset = MarketplaceProductCategory.objects.all()
     serializer_class = MarketplaceProductCategorySerializer
 
-class MarketplaceProductOrderViewSet(viewsets.ModelViewSet):
-    queryset = MarketplaceProductOrder.objects.all()
-    serializer_class = MarketplaceProductOrderSerializer
-    permission_classes = [IsAuthenticated]
 
 
 class ProductRatingViewSet(viewsets.ModelViewSet):
@@ -43,7 +51,6 @@ class ProductRatingViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-# ============================== Product By Government =====================
 class GovernmentProductViewSet(viewsets.ModelViewSet):
     queryset = GovernmentProduct.objects.all()
     serializer_class = GovernmentProductSerializer
@@ -52,10 +59,7 @@ class GovernmentProductCategoryViewset(viewsets.ModelViewSet):
     queryset = GovernmentProductCategory.objects.all()
     serializer_class = GovernmentProductCategorySerializer
 
-class GovernmentProductOrderViewSet(viewsets.ModelViewSet):
-    queryset = GovernmentProductOrder.objects.all()
-    serializer_class = GovernmentProductOrderSerializer
-    permission_classes = [IsAuthenticated]
+
 
 # ============================== Online consultation =======================
 
@@ -67,8 +71,7 @@ class GovernmentProductOrderViewSet(viewsets.ModelViewSet):
 def generate_text_to_speech(request, product_id):
     product = MarketplaceProduct.objects.get(id=product_id)
 
-    # product_info_ne = product.name+" को मूल्य" + str(product.price)+ " " + "अगाडि जानको लागि हरियो बटनमा क्लिक गर्नुहोस्"
-    product_info_ne = "ज पायो तेइ नभन बुझ्येउ फुछी केटि "
+    product_info_ne = product.name+" को मूल्य" + str(product.price)+ " " + "अगाडि जानको लागि हरियो बटनमा क्लिक गर्नुहोस्"
 
     from django.conf import settings
     tts = gTTS(text=product_info_ne, lang='ne')

@@ -8,5 +8,5 @@
 7. http://localhost:8000/api/governmentproduct-category/
 8. http://localhost:8000/api/governmentproducts/
 9. http://localhost:8000/api/notice/
-10. http://localhost:8000/api/marketplace-product-orders/
-11. http://localhost:8000/api/government-product-orders/
+10. http://localhost:8000/api/orders/
+11. http://localhost:8000/accounts/users/
