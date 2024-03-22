@@ -21,11 +21,12 @@ class FarmerProfileViewSet(viewsets.ModelViewSet):
 class Order(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(MarketplaceProduct, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
+    delivery_location = models.CharField(max_length=128,null=True, blank=True)
 
     def __str__(self):
         return f"Order #{self.id} by {self.user.email}"
@@ -39,8 +40,6 @@ class MarketplaceProductViewSet(viewsets.ModelViewSet):
 class MarketplaceProductCategoryViewset(viewsets.ModelViewSet):
     queryset = MarketplaceProductCategory.objects.all()
     serializer_class = MarketplaceProductCategorySerializer
-
-
 
 class ProductRatingViewSet(viewsets.ModelViewSet):
     queryset = ProductRating.objects.all()
@@ -59,12 +58,6 @@ class GovernmentProductCategoryViewset(viewsets.ModelViewSet):
     queryset = GovernmentProductCategory.objects.all()
     serializer_class = GovernmentProductCategorySerializer
 
-
-
-# ============================== Online consultation =======================
-
-
-# ============================== data training =============================
 
 
 @csrf_exempt
